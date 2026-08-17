@@ -15,7 +15,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <style>
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: #FFFFFF; color: #55566B; font-family: "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.7; overflow-x: hidden; }
+  body { margin: 0; background: #FFFFFF; color: #55566B; font-family: "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.7; overflow-x: clip; }
   * { box-sizing: border-box; }
   h1, h2, h3, h4, h5 { margin: 0; font-family: Marcellus, "Times New Roman", Georgia, serif; font-weight: 400; color: #17172B; letter-spacing: 0.01em; }
   p { margin: 0; text-wrap: pretty; }
@@ -31,9 +31,10 @@
   @keyframes rqjCue { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(9px); opacity: 1; } }
 </style>
 </helmet>
-<div style="--accent: {{ accent }}"><div style="position:relative;width:100%;overflow-x:hidden">
+<div style="--accent: {{ accent }}"><div style="position:relative;width:100%">
 
-<div data-chrome data-screen-label="Header" style="position:sticky;top:0;z-index:60">
+<div data-chrome-spacer style="height:clamp(74px,8vw,100px)"></div>
+<div data-chrome data-screen-label="Header" style="position:fixed;top:0;left:0;right:0;z-index:60">
   <div style="display:{{ topBarDisplay }};align-items:center;justify-content:space-between;gap:24px;background:#1B1C4B;color:rgba(255,255,255,0.72);padding:0 clamp(20px,4vw,64px);height:44px;font-size:14px;letter-spacing:0.02em">
     <div style="display:flex;align-items:center;gap:26px">
       <a href="mailto:ruhul70@yahoo.com" style="color:rgba(255,255,255,0.78);display:flex;align-items:center;gap:8px;transition:color .25s ease" style-hover="color:#fff">
@@ -650,7 +651,11 @@ class Component extends DCLogic {
     this._fitHero = () => {
       const chrome = document.querySelector("[data-chrome]");
       const hero = document.querySelector("[data-hero]");
-      if (chrome && hero) hero.style.minHeight = "calc(100svh - " + Math.round(chrome.getBoundingClientRect().height) + "px)";
+      const spacer = document.querySelector("[data-chrome-spacer]");
+      if (!chrome) return;
+      const h = Math.round(chrome.getBoundingClientRect().height);
+      if (spacer) spacer.style.height = h + "px";
+      if (hero) hero.style.minHeight = "calc(100svh - " + h + "px)";
     };
     this._fitHero();
     setTimeout(this._fitHero, 300);
